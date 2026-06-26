@@ -6,31 +6,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xero | Donation</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="https://unpkg.com/lucide-static@latest/icons/shield-check.svg">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
     <header>
-        <nav>
-            <button class="tab" onclick="openTab('home')">
+        <nav class="desktop-nav">
+            <button class="tab" onclick="openTab('home', this)">
                 <i data-lucide="house"></i>
                 Home
             </button>
-            <button class="tab active" onclick="openTab('donate')">
+            <button class="tab active" onclick="openTab('donate', this)">
                 <i data-lucide="heart-handshake"></i>
                 Donate
             </button>
-            <button class="tab" onclick="openTab('scripts')">
+            <button class="tab" onclick="openTab('scripts', this)">
                 <i data-lucide="download"></i>
                 Download Scripts
             </button>
         </nav>
+
+        <button class="mobile-menu" onclick="toggleMenu()">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <div class="sidebar">
+            <button onclick="openTab('home', this)">
+                <i data-lucide="house"></i>
+                Home
+            </button>
+
+            <button onclick="openTab('donate', this)">
+                <i data-lucide="heart-handshake"></i>
+                Donate
+            </button>
+
+            <button onclick="openTab('scripts', this)">
+                <i data-lucide="download"></i>
+                Download Scripts
+            </button>
+        </div>
     </header>
 
     <main>
+        <section id="home" class="page">
+            <div class="card">
+                <i data-lucide="user-round"></i>
+                <h1>About Me</h1>
+                <p>
+                    Hello! I am Xero. I am a Roblox script developer who spends countless hours writing custom code and
+                    building execution tools. Here is the honest truth, keeping these tools free, optimized, and fully
+                    functional against security updates and game patches is practically a full-time job. I choose not to
+                    lock my scripts behind annoying paywalls, but development requires real resources. Your donations
+                    are the literal fuel that allows me to dedicate my time to maintaining and expanding these projects
+                    for the community.
+                </p>
+            </div>
+            <div class="page-buttons">
+                <button onclick="openTab('donate')">
+                    Next Page
+                </button>
+            </div>
+        </section>
         <section id="donate" class="page active">
             <div class="card">
-                <i data-lucide="coffee"></i>
+                <i data-lucide="heart-handshake"></i>
                 <h1>Support My Work</h1>
                 <p>
                     If you like my projects and want to support my journey,
@@ -38,50 +79,33 @@
                 </p>
                 <form>
                     <script src="https://checkout.razorpay.com/v1/payment-button.js"
-                        data-payment_button_id="pl_T6aXzOnr26POi9" async> </script>
+                        data-payment_button_id="pl_T6aXzOnr26POi9" async>
+                        </script>
                 </form>
             </div>
-        </section>
-
-        <section id="home" class="page">
-            <div class="card">
-                <i data-lucide="user-round"></i>
-                <h1>About Me</h1>
-                <p>
-                    Hello! I am Xero, Yes that belululugaaaa guy. I am a passionate developer and creator of various
-                    scripts and tools. Your support helps me continue to create and share my work with the community.
-                </p>
+            <div class="page-buttons">
+                <button onclick="openTab('home')">
+                    Previous
+                </button>
+                <button onclick="openTab('scripts')">
+                    Next Page
+                </button>
             </div>
         </section>
-
         <section id="scripts" class="page">
-            <h1 class="section-title">Download Scripts</h1>
-            <div class="grid">
-                <div class="script-card">
-                    <i data-lucide="file-code"></i>
-                    <h2>Script Name</h2>
-                    <p>
-                        Description of the script.
-                    </p>
-                    <a href="scripts/example.zip" download>
-                        <button class="primary">
-                            Download
-                        </button>
-                    </a>
+            <h1 class="section-title">
+                Download Scripts
+            </h1>
+            <div class="search-box">
+                <i data-lucide="search"></i>
+                <input type="text" id="scriptSearch" placeholder="Search scripts...">
+                <div id="scriptContainer" class="grid">
                 </div>
-                <div class="script-card">
-                    <i data-lucide="terminal"></i>
-                    <h2>Another Script</h2>
-                    <p>
-                        Another useful script.
-                    </p>
-                    <a href="scripts/script2.zip" download>
-                        <button class="primary">
-                            Download
-                        </button>
-                    </a>
+                <div class="page-buttons">
+                    <button onclick="openTab('donate')">
+                        Previous
+                    </button>
                 </div>
-            </div>
         </section>
     </main>
     <footer>
