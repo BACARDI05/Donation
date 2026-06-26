@@ -13,11 +13,11 @@
 <body>
     <header>
         <nav class="desktop-nav">
-            <button class="tab" onclick="openTab('home', this)">
+            <button class="tab active" onclick="openTab('home', this)">
                 <i data-lucide="house"></i>
                 Home
             </button>
-            <button class="tab active" onclick="openTab('donate', this)">
+            <button class="tab" onclick="openTab('donate', this)">
                 <i data-lucide="heart-handshake"></i>
                 Donate
             </button>
@@ -49,7 +49,75 @@
         </div>
     </header>
 
-    <main>
+<main>
+        <!-- Home Section -->
+        <section id="home" class="page active">
+            <h1 class="section-title">Introduction</h1> <!-- Added Heading -->
+            <div class="card">
+                <i data-lucide="user-round"></i>
+                <h1>About Me</h1>
+                <p>
+                    Hello! I am Xero. I am a Roblox script developer who spends countless hours writing custom code and
+                    building execution tools. Here is the honest truth, keeping these tools free, optimized, and fully
+                    functional against security updates and game patches is practically a full-time job. I choose not to
+                    lock my scripts behind annoying paywalls, but development requires real resources. Your donations
+                    are the literal fuel that allows me to dedicate my time to maintaining and expanding these projects
+                    for the community.
+                </p>
+            </div>
+            <div class="page-buttons">
+                <button onclick="openTab('donate')">
+                    Next Page
+                </button>
+            </div>
+        </section>
+
+        <!-- Donate Section -->
+        <section id="donate" class="page">
+            <h1 class="section-title">Donation</h1>
+            <div class="card">
+                <i data-lucide="heart-handshake"></i>
+                <h1>Support My Work</h1>
+                <p>
+                    If you like my projects and want to support my journey,
+                    you can contribute here.
+                </p>
+                <form>
+                    <script src="https://checkout.razorpay.com/v1/payment-button.js"
+                        data-payment_button_id="pl_T6aXzOnr26POi9" async>
+                        </script>
+                </form>
+            </div>
+            <div class="page-buttons">
+                <button onclick="openTab('home')">
+                    Previous
+                </button>
+                <button onclick="openTab('scripts')">
+                    Next Page
+                </button>
+            </div>
+        </section>
+
+        <!-- Scripts Section -->
+        <section id="scripts" class="page">
+            <h1 class="section-title">
+                Download Scripts
+            </h1>
+            <div class="search-box">
+                <i data-lucide="search"></i>
+                <input type="text" id="scriptSearch" placeholder="Search scripts...">
+            </div>
+            <div id="scriptContainer" class="grid">
+            </div>
+            <div class="page-buttons">
+                <button onclick="openTab('donate')">
+                    Previous
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- <main>
         <section id="home" class="page">
             <div class="card">
                 <i data-lucide="user-round"></i>
@@ -99,15 +167,17 @@
             <div class="search-box">
                 <i data-lucide="search"></i>
                 <input type="text" id="scriptSearch" placeholder="Search scripts...">
-                <div id="scriptContainer" class="grid">
-                </div>
-                <div class="page-buttons">
-                    <button onclick="openTab('donate')">
-                        Previous
-                    </button>
-                </div>
+            </div>
+            <div id="scriptContainer" class="grid">
+            </div>
+
+            <div class="page-buttons">
+                <button onclick="openTab('donate')">
+                    Previous
+                </button>
+            </div>
         </section>
-    </main>
+    </main> -->
     <footer>
         <p>
             © 2026 Xero (BACARDI05). All rights reserved.
