@@ -1,16 +1,23 @@
-function openTab(tabName){
+function openDownloads(){
     document
     .querySelectorAll(".page")
-    .forEach(page => {
+    .forEach(page=>{
         page.classList.remove("active");
     });
     document
-    .getElementById(tabName)
+    .getElementById("scripts")
     .classList.add("active");
     document
     .querySelectorAll(".tab")
-    .forEach(btn => {
+    .forEach(btn=>{
         btn.classList.remove("active");
     });
-    event.currentTarget.classList.add("active");
+    document
+    .getElementById("downloadTab")
+    .classList.add("active");
+    document
+    .getElementById("scripts")
+    .scrollIntoView({
+        behavior:"smooth"
+    });
 }

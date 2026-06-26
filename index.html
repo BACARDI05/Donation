@@ -12,17 +12,19 @@
 <body>
     <header>
         <nav>
-            <button class="tab active" onclick="openTab('donate')">
-                <i data-lucide="heart-handshake"></i>
-                Donate
-            </button>
             <button class="tab" onclick="openTab('home')">
                 <i data-lucide="house"></i>
                 Home
             </button>
-            <button class="tab" onclick="openTab('scripts')">
+            <button class="tab active" onclick="openTab('donate')">
+                <i data-lucide="heart-handshake"></i>
+                Donate
+            </button>
+            <button id="downloadTab" class="tab" onclick="openTab('scripts')">
                 <i data-lucide="download"></i>
-                Download Scripts
+                <a href="javascript:openDownloads()">
+                    Download Scripts
+                </a>
             </button>
         </nav>
     </header>
@@ -48,7 +50,8 @@
                 <i data-lucide="user-round"></i>
                 <h1>About Me</h1>
                 <p>
-                    Hello! I am Xero, Yes that belululugaaaa guy. I am a passionate developer and creator of various scripts and tools. Your support helps me continue to create and share my work with the community.
+                    Hello! I am Xero, Yes that belululugaaaa guy. I am a passionate developer and creator of various
+                    scripts and tools. Your support helps me continue to create and share my work with the community.
                 </p>
             </div>
         </section>
