@@ -106,13 +106,6 @@ main {
     max-width:500px;
 }
 
-/* .card svg,
-.script-card svg,
-.empty-card svg {
-    width:45px;
-    margin-bottom:15px;
-} */
-
 .script-title{
     display:flex;
     justify-content:center;
