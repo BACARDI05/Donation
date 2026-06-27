@@ -87,7 +87,7 @@ function displayScripts(data, isSearch = false) {
     </p>
     <a href="${script.file}" download target="_blank">
         <button class="primary">
-        Download
+        Go to the file >
         </button>
     </a>
     </div>
