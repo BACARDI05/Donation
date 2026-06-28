@@ -150,6 +150,13 @@ p {
     background:#6d28d9;
 }
 
+.primary:disabled,
+.primary:disabled:hover {
+    background:#64748b;
+    cursor:not-allowed;
+    opacity:.7;
+}
+
 .grid {
     display:grid;
     grid-template-columns:

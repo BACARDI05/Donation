@@ -1,4 +1,5 @@
 let scriptsData = [];
+const DATA_DEBUG_PREFIX = "[script-data]";
 let notifications = {
     script_not_found: {
         icon: "file-warning",
@@ -23,25 +24,65 @@ let notifications = {
 };
 let notificationTimer = null;
 let notificationRemoveTimer = null;
+function cacheSafeURL(path) {
+    const url = new URL(path, window.location.href);
+    url.searchParams.set("v", Date.now().toString());
+    return url.toString();
+}
+function debugData(message, details = null) {
+    if(details){
+        console.warn(DATA_DEBUG_PREFIX, message, details);
+        return;
+    }
+    console.warn(DATA_DEBUG_PREFIX, message);
+}
+function normalizeScriptsData(data) {
+    const entries = Array.isArray(data) ? data : [data];
+    return entries.filter(script => {
+        const isValid = script && typeof script === "object" && !Array.isArray(script);
+        if(!isValid) debugData("Ignored invalid script entry.", script);
+        return isValid;
+    }).map(script => ({
+        file: typeof script.file === "string" ? script.file.trim() : "",
+        name: typeof script.name === "string" && script.name.trim() ? script.name.trim() : "Untitled Script",
+        description: typeof script.description === "string" ? script.description.trim() : ""
+    }));
+}
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&#039;"
+    }[character]));
+}
 async function loadData() {
     try{
-        const notificationResponse = await fetch("notifications.json");
+        const notificationResponse = await fetch(cacheSafeURL("notifications.json"), {
+            cache: "no-store"
+        });
         if(notificationResponse.ok){
             notifications = {
                 ...notifications,
                 ...await notificationResponse.json()
             };
         }
-    }catch{
+    }catch(error){
+        debugData("Unable to load notifications.json. Using defaults.", error);
         notifications = { ...notifications };
     }
 
     try{
-        const scriptResponse = await fetch("script-data.json");
+        const scriptResponse = await fetch(cacheSafeURL("script-data.json"), {
+            cache: "no-store"
+        });
         if(!scriptResponse.ok) throw new Error("Unable to load script data.");
-        scriptsData = await scriptResponse.json();
+        const loadedScripts = await scriptResponse.json();
+        scriptsData = normalizeScriptsData(loadedScripts);
         displayScripts(scriptsData);
-    }catch{
+    }catch(error){
+        debugData("Unable to load or parse script-data.json.", error);
         scriptsData = [];
         displayScripts(scriptsData);
     }
@@ -129,30 +170,35 @@ function displayScripts(data) {
         return;
     }
     data.forEach(script => {
+        const hasFile = Boolean(script.file);
+        const safeFileArgument = escapeHTML(JSON.stringify(script.file));
         container.innerHTML += `
         <div class="script-card">
             <div class="script-title">
                 <i data-lucide="file-code"></i>
-                <h2>${script.name}</h2>
+                <h2>${escapeHTML(script.name)}</h2>
             </div>
-            <p>${script.description}</p>
-            <button class="primary" onclick="copyScript('${script.file}')">
+            <p>${escapeHTML(script.description)}</p>
+            <button class="primary" ${hasFile ? `onclick="copyScript(${safeFileArgument})"` : "disabled"}>
                 Copy Script
             </button>
-            <button class="primary" onclick="downloadScript('${script.file}')">
-                Download
+            <button class="primary" ${hasFile ? `onclick="downloadScript(${safeFileArgument})"` : "disabled"}>
+                ${hasFile ? "Download" : "Unavailable"}
             </button>
         </div>`;
     });
     lucide.createIcons();
 }
 function getRawURL(url){
+    if(!url) return "";
+    if(!url.includes("github.com")) return url;
     return url
     .replace("github.com", "raw.githubusercontent.com")
     .replace("/blob/", "/");
 }
 async function copyScript(url){
     try{
+        if(!url) throw new Error("Missing script file URL.");
         const response = await fetch(getRawURL(url));
         if(!response.ok) throw new Error();
         const text = await response.text();
@@ -164,6 +210,7 @@ async function copyScript(url){
 }
 async function downloadScript(url){
     try{
+        if(!url) throw new Error("Missing script file URL.");
         const response = await fetch(getRawURL(url));
         if(!response.ok) throw new Error();
         const blob = await response.blob();
