@@ -1,11 +1,50 @@
 let scriptsData = [];
-let notifications = {};
+let notifications = {
+    script_not_found: {
+        icon: "file-warning",
+        title: "Script Not Found",
+        description: "The requested script file could not be loaded."
+    },
+    copy_success: {
+        icon: "copy-check",
+        title: "Script Copied",
+        description: "Raw script code copied successfully."
+    },
+    copy_failed: {
+        icon: "circle-alert",
+        title: "Copy Failed",
+        description: "Unable to fetch script code."
+    },
+    download_failed: {
+        icon: "download-cloud",
+        title: "Download Failed",
+        description: "Script file is currently unavailable."
+    }
+};
+let notificationTimer = null;
+let notificationRemoveTimer = null;
 async function loadData() {
-    const scriptResponse = await fetch("script-data.json");
-    scriptsData = await scriptResponse.json();
-    const notificationResponse = await fetch("notifications.json");
-    notifications = await notificationResponse.json();
-    displayScripts(scriptsData);
+    try{
+        const notificationResponse = await fetch("notifications.json");
+        if(notificationResponse.ok){
+            notifications = {
+                ...notifications,
+                ...await notificationResponse.json()
+            };
+        }
+    }catch{
+        notifications = { ...notifications };
+    }
+
+    try{
+        const scriptResponse = await fetch("script-data.json");
+        if(!scriptResponse.ok) throw new Error("Unable to load script data.");
+        scriptsData = await scriptResponse.json();
+        displayScripts(scriptsData);
+    }catch{
+        scriptsData = [];
+        displayScripts(scriptsData);
+    }
 }
 function openTab(tabName, button = null) {
     document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
@@ -18,26 +57,67 @@ function openTab(tabName, button = null) {
 function notify(type) {
     const data = notifications[type];
     if(!data) return;
+
+    let root = document.getElementById("notificationRoot");
+    if(!root){
+        root = document.createElement("div");
+        root.id = "notificationRoot";
+        root.className = "notification-root";
+        root.setAttribute("aria-live", "polite");
+        root.setAttribute("aria-atomic", "true");
+        document.body.appendChild(root);
+    }
+
+    clearTimeout(notificationTimer);
+    clearTimeout(notificationRemoveTimer);
+    root.innerHTML = "";
+
     const box = document.createElement("div");
     box.className = "notification";
-    box.innerHTML = `
-        <i data-lucide="${data.icon}"></i>
-        <div>
-            <h3>${data.title}</h3>
-            <p>${data.description}</p>
-        </div>
-    `;
-    document.body.appendChild(box);
-    lucide.createIcons();
-    requestAnimationFrame(() => box.classList.add("show"));
-    setTimeout(() => {
+    box.setAttribute("role", "status");
+
+    const iconWrap = document.createElement("span");
+    iconWrap.className = "notification__icon";
+    const icon = document.createElement("i");
+    icon.setAttribute("data-lucide", data.icon);
+    iconWrap.appendChild(icon);
+
+    const content = document.createElement("div");
+    content.className = "notification__content";
+
+    const title = document.createElement("h3");
+    title.className = "notification__title";
+    title.textContent = data.title;
+
+    const description = document.createElement("p");
+    description.className = "notification__description";
+    description.textContent = data.description;
+
+    content.append(title, description);
+    box.append(iconWrap, content);
+    root.appendChild(box);
+
+    lucide.createIcons({
+        attrs: {
+            "aria-hidden": "true"
+        }
+    });
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => box.classList.add("show"));
+    });
+
+    notificationTimer = setTimeout(() => {
         box.classList.remove("show");
-        setTimeout(() => box.remove(), 500);
+        notificationRemoveTimer = setTimeout(() => {
+            box.remove();
+        }, 500);
     }, 3000);
 }
 function displayScripts(data) {
     const container = document.getElementById("scriptContainer");
     container.innerHTML = "";
+    container.classList.toggle("is-empty", data.length === 0);
     if(data.length === 0){
         container.innerHTML = `
         <div class="empty-card">
