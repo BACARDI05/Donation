@@ -330,3 +330,60 @@ main {
     flex:1;
 }
 }
+
+.script-card .primary{
+    display:block;
+    width:100%;
+}
+
+.notification{
+    position:fixed;
+    right:-400px;
+    bottom:25px;
+    width:330px;
+    padding:18px;
+    display:flex;
+    gap:15px;
+    align-items:center;
+
+    background:rgba(0,0,0,0.35);
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(0,0,0,.45);
+    border-radius:18px;
+
+    z-index:9999;
+
+    transform:translateX(0);
+    transition:
+    transform .5s cubic-bezier(.22,1,.36,1),
+    opacity .5s ease;
+}
+
+.notification.show{
+    transform:translateX(-425px);
+}
+
+.notification svg{
+    width:32px;
+    height:32px;
+}
+
+.notification h3{
+    margin:0 0 5px;
+}
+
+.notification p{
+    margin:0;
+    font-size:14px;
+}
+
+@media(max-width:700px){
+.notification{
+    width:90%;
+}
+
+.notification.show{
+    transform:translateX(-105%);
+}
+}
