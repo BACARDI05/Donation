@@ -134,16 +134,27 @@ main {
     align-items:center;
     gap:12px;
     margin-bottom:15px;
+    min-height:34px;
+    padding-left:30px;
+    position:relative;
 }
 
 .script-title svg{
+    flex-shrink:0;
+    position:absolute;
+    left:0;
+    top:50%;
+    transform:translateY(-50%);
     width:28px;
     height:28px;
     margin:0;
 }
 
 .script-title h2{
+    font-size:23px;
+    line-height:1.16;
     margin:0;
+    overflow-wrap:break-word;
 }
 
 .script-card > p {

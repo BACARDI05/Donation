@@ -1,6 +1,14 @@
 const snowLayerId = "snow-background";
 const snowSettingsFile = "snow-particles.json";
 
+function runWhenPageReady(callback) {
+    if(document.readyState === "loading"){
+        document.addEventListener("DOMContentLoaded", callback);
+        return;
+    }
+    callback();
+}
+
 function snowConfigURL(path) {
     const url = new URL(path, window.location.href);
     url.searchParams.set("v", Date.now().toString());
@@ -23,4 +31,4 @@ async function startSnowfall() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", startSnowfall);
+runWhenPageReady(startSnowfall);

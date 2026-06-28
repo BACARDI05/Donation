@@ -24,6 +24,18 @@ let notifications = {
 };
 let notificationTimer = null;
 let notificationRemoveTimer = null;
+function whenReady(callback) {
+    if(document.readyState === "loading"){
+        document.addEventListener("DOMContentLoaded", callback);
+        return;
+    }
+    callback();
+}
+function refreshIcons(options) {
+    if(window.lucide && typeof lucide.createIcons === "function"){
+        lucide.createIcons(options);
+    }
+}
 function cacheSafeURL(path) {
     const url = new URL(path, window.location.href);
     url.searchParams.set("v", Date.now().toString());
@@ -138,7 +150,7 @@ function notify(type) {
     box.append(iconWrap, content);
     root.appendChild(box);
 
-    lucide.createIcons({
+    refreshIcons({
         attrs: {
             "aria-hidden": "true"
         }
@@ -166,13 +178,13 @@ function displayScripts(data) {
             <h2>No Script Found</h2>
             <p>No scripts matched your search.</p>
         </div>`;
-        lucide.createIcons();
+        refreshIcons();
         return;
     }
-    data.forEach(script => {
+    container.innerHTML = data.map(script => {
         const hasFile = Boolean(script.file);
         const safeFileArgument = escapeHTML(JSON.stringify(script.file));
-        container.innerHTML += `
+        return `
         <div class="script-card">
             <div class="script-title">
                 <i data-lucide="file-code"></i>
@@ -188,8 +200,8 @@ function displayScripts(data) {
                 </button>
             </div>
         </div>`;
-    });
-    lucide.createIcons();
+    }).join("");
+    refreshIcons();
 }
 function getRawURL(url){
     if(!url) return "";
@@ -226,9 +238,11 @@ async function downloadScript(url){
         notify("download_failed");
     }
 }
-document.addEventListener("DOMContentLoaded",()=>{
+whenReady(()=>{
     loadData();
-    document.getElementById("scriptSearch").addEventListener("input",(e)=>{
+    const scriptSearch = document.getElementById("scriptSearch");
+    if(!scriptSearch) return;
+    scriptSearch.addEventListener("input",(e)=>{
         const value = e.target.value.toLowerCase();
         const filtered = scriptsData.filter(script =>
             script.name.toLowerCase().includes(value) ||
