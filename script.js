@@ -179,12 +179,14 @@ function displayScripts(data) {
                 <h2>${escapeHTML(script.name)}</h2>
             </div>
             <p>${escapeHTML(script.description)}</p>
-            <button class="primary" ${hasFile ? `onclick="copyScript(${safeFileArgument})"` : "disabled"}>
-                Copy Script
-            </button>
-            <button class="primary" ${hasFile ? `onclick="downloadScript(${safeFileArgument})"` : "disabled"}>
-                ${hasFile ? "Download" : "Unavailable"}
-            </button>
+            <div class="script-actions">
+                <button class="primary" ${hasFile ? `onclick="copyScript(${safeFileArgument})"` : "disabled"}>
+                    Copy Script
+                </button>
+                <button class="primary" ${hasFile ? `onclick="downloadScript(${safeFileArgument})"` : "disabled"}>
+                    ${hasFile ? "Download" : "Unavailable"}
+                </button>
+            </div>
         </div>`;
     });
     lucide.createIcons();
