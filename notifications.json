@@ -1,0 +1,22 @@
+{
+    "script_not_found": {
+        "icon": "file-warning",
+        "title": "Script Not Found",
+        "description": "The requested script file could not be loaded."
+    },
+    "copy_success": {
+        "icon": "copy-check",
+        "title": "Script Copied",
+        "description": "Raw script code copied successfully."
+    },
+    "copy_failed": {
+        "icon": "circle-alert",
+        "title": "Copy Failed",
+        "description": "Unable to fetch script code."
+    },
+    "download_failed": {
+        "icon": "download-cloud",
+        "title": "Download Failed",
+        "description": "Script file is currently unavailable."
+    }
+}
